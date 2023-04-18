@@ -44,10 +44,22 @@ def register_user(request):
             password = form.cleaned_data['password1']
             user = authenticate(username=username, password=password)
             login(request, user)
-            messages.success(request, "You Have Successfully Registered! Welcome")
-            return redirect("home")
+             
     else:
         form = SignUpForm()
         return render(request, 'register.html', {'form':form})
     
     return render(request, 'register.html', {'form':form})
+
+
+#this will retrieve a specific entity form the DB using the primary key -localhost:8000/record/2
+def customer_record(request, pk):
+    if request.user.is_authenticated:
+        #look Up Records
+        customer_record = Record.objects.get(id=pk)
+        return render(request, 'record.html', {'customer_record':customer_record})
+    else:
+        messages.success(request, "You Must Be Logged In To View That Page....")
+        return redirect("home")
+
+        
